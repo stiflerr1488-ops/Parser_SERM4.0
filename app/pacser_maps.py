@@ -475,19 +475,9 @@ class YandexMapsScraper:
         phone = self._normalize_phone(phone_text)
 
         verified = ""
-        if (
-            card_root.locator(
-                "span.business-verified-badge svg path[fill='#3BB300' i]"
-            ).count()
-            > 0
-        ):
+        if card_root.locator("span.business-verified-badge._prioritized").count() > 0:
             verified = "зелёная"
-        elif (
-            card_root.locator(
-                "span.business-verified-badge svg path[fill='#196DFF' i]"
-            ).count()
-            > 0
-        ):
+        elif card_root.locator("span.business-verified-badge").count() > 0:
             verified = "синяя"
 
         award = self._safe_text(
