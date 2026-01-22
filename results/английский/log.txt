@@ -1,0 +1,32 @@
+17:12:59 [DEBUG] Using proactor: IocpProactor
+17:13:00 [INFO] Очищаю cookies, разрешения и хранилище для новой сессии
+17:13:06 [INFO] Звук уведомления: captcha
+17:14:30 [DEBUG] SERP: card 1/18 name=Лайтхаус phone=yes site=yes url=yes
+17:14:31 [DEBUG] SERP: card 2/18 name=Эдукацентр в Пушкине phone=yes site=yes url=yes
+17:14:32 [DEBUG] SERP: card 3/18 name=LinGO club phone=yes site=yes url=yes
+17:14:33 [DEBUG] SERP: card 4/18 name=Mix! phone=yes site=yes url=yes
+17:14:35 [DEBUG] SERP: card 5/18 name=Sherlock English School phone=yes site=yes url=yes
+17:14:36 [DEBUG] SERP: card 6/18 name=Tony Centre phone=yes site=yes url=yes
+17:14:37 [DEBUG] SERP: card 7/18 name=Benedict School phone=yes site=yes url=yes
+17:14:38 [DEBUG] SERP: card 8/18 name=Старлинг phone=yes site=yes url=yes
+17:14:39 [DEBUG] SERP: card 9/18 name=English World phone=yes site=yes url=yes
+17:14:40 [DEBUG] SERP: card 10/18 name=Helen Doron English phone=yes site=yes url=yes
+17:14:41 [DEBUG] SERP: card 11/18 name=IQ-school phone=yes site=yes url=yes
+17:14:42 [DEBUG] SERP: card 12/18 name=Educa Keskus phone=yes site=yes url=yes
+17:14:43 [DEBUG] SERP: card 13/18 name=Лайтхаус phone=yes site=yes url=yes
+17:14:44 [DEBUG] SERP: card 14/18 name=Школа дополнительного обучения иностранным языкам phone=yes site=yes url=yes
+17:14:45 [DEBUG] SERP: card 15/18 name=Английский язык phone=yes site=yes url=yes
+17:14:46 [DEBUG] SERP: card 16/18 name=Курсы английского языка Master English phone=yes site=yes url=yes
+17:14:47 [DEBUG] SERP: card 17/18 name=English Class phone=yes site=no url=yes
+17:14:48 [DEBUG] SERP: phone not found for card 18 (Nivi)
+17:14:48 [DEBUG] SERP: card 18/18 name=Nivi phone=no site=no url=yes
+17:14:48 [INFO] Сохранил файл: C:\Users\Asus\Documents\GitHub\Parser_SERM4.0\results\английский\английский_пушкин_22.01_17-12.xlsx
+17:14:48 [INFO] Сохранил файл: C:\Users\Asus\Documents\GitHub\Parser_SERM4.0\results\английский\английский_пушкин_22.01_17-12.xlsx
+17:14:48 [INFO] Сохранил файл: C:\Users\Asus\Documents\GitHub\Parser_SERM4.0\results\английский\английский_пушкин_22.01_17-12.xlsx
+17:14:48 [DEBUG] Failed to close captcha helper
+Traceback (most recent call last):
+  File "C:\Users\Asus\Documents\GitHub\Parser_SERM4.0\app\parser_search.py", line 1302, in run_fast_parser
+    captcha_helper.close()
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'CaptchaFlowHelper' object has no attribute 'close'
+17:14:48 [INFO] Звук уведомления: finish
