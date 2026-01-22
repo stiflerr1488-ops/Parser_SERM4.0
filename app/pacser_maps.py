@@ -61,7 +61,10 @@ class YandexMapsScraper:
         captcha_whitelist_event=None,
         captcha_hook: Optional[CaptchaHook] = None,
         log: Optional[Callable[[str], None]] = None,
+        **ignored_kwargs,
     ) -> None:
+        if ignored_kwargs:
+            LOGGER.debug("Игнорирую неподдерживаемые параметры: %s", ignored_kwargs)
         self.query = query
         self.limit = limit
         self.stop_event = stop_event or threading.Event()
