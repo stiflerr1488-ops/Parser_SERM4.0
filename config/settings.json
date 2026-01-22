@@ -10,7 +10,7 @@
     "white_list": ""
   },
   "program": {
-    "headless": true,
+    "headless": false,
     "open_result": true,
     "log_level": "info",
     "autosave_settings": true
