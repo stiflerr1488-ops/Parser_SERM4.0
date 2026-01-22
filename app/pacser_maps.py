@@ -55,6 +55,7 @@ class YandexMapsScraper:
         self,
         query: str,
         limit: Optional[int] = None,
+        headless: Optional[bool] = None,
         stop_event=None,
         pause_event=None,
         captcha_resume_event=None,
@@ -64,6 +65,7 @@ class YandexMapsScraper:
     ) -> None:
         self.query = query
         self.limit = limit
+        self.headless = headless
         self.stop_event = stop_event or threading.Event()
         self.pause_event = pause_event or threading.Event()
         self.captcha_resume_event = captcha_resume_event or threading.Event()
@@ -73,17 +75,18 @@ class YandexMapsScraper:
 
     def run(self) -> Generator[Organization, None, None]:
         self._log(
-            "Запускаю парсер: запрос=%s, лимит=%s",
+            "Запускаю парсер: запрос=%s, лимит=%s, headless=%s",
             self.query,
             self.limit,
+            self.headless,
         )
         with sync_playwright() as p:
             LOGGER.info("Запускаю браузер")
             launch_args = [*PLAYWRIGHT_LAUNCH_ARGS, "--start-minimized"]
-            browser = launch_chrome(
-                p,
-                args=launch_args,
-            )
+            launch_kwargs = {"args": launch_args}
+            if self.headless is not None:
+                launch_kwargs["headless"] = self.headless
+            browser = launch_chrome(p, **launch_kwargs)
             LOGGER.info("Создаю контекст браузера")
             context = browser.new_context(
                 user_agent=PLAYWRIGHT_USER_AGENT,
@@ -100,17 +103,20 @@ class YandexMapsScraper:
             LOGGER.info("Открываю страницу: %s", url)
             nav_start = time.monotonic()
             page.goto(url, wait_until="domcontentloaded")
-            captcha_helper = CaptchaFlowHelper(
-                playwright=p,
-                base_context=context,
-                base_page=page,
-                log=self._log,
-                hook=self.captcha_hook,
-                user_agent=PLAYWRIGHT_USER_AGENT,
-                viewport=PLAYWRIGHT_VIEWPORT,
-                target_url=url,
-                whitelist_event=self.captcha_whitelist_event,
-            )
+            captcha_kwargs = {
+                "playwright": p,
+                "base_context": context,
+                "base_page": page,
+                "log": self._log,
+                "hook": self.captcha_hook,
+                "user_agent": PLAYWRIGHT_USER_AGENT,
+                "viewport": PLAYWRIGHT_VIEWPORT,
+                "target_url": url,
+                "whitelist_event": self.captcha_whitelist_event,
+            }
+            if self.headless is not None:
+                captcha_kwargs["headless"] = self.headless
+            captcha_helper = CaptchaFlowHelper(**captcha_kwargs)
             self._captcha_action_poll = captcha_helper.poll
             try:
                 page = self._ensure_no_captcha(page)
