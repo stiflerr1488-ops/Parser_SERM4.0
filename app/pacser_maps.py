@@ -515,32 +515,33 @@ class YandexMapsScraper:
         )
 
     def _extract_verified(self, card_root) -> str:
-        prioritized = card_root.locator("span.business-verified-badge._prioritized")
+        prioritized = card_root.locator(
+            "h1.card-title-view__title span.business-verified-badge._prioritized"
+        )
         if prioritized.count() > 0:
             return "зелёная"
 
-        badge = card_root.locator("span.business-verified-badge")
+        badge = card_root.locator(
+            "h1.card-title-view__title span.business-verified-badge"
+        )
         if badge.count() == 0:
             return ""
 
-        fill_colors: list[str] = []
-        for index in range(min(badge.count(), 3)):
-            try:
-                colors = badge.nth(index).evaluate(
-                    """(node) => Array.from(node.querySelectorAll('svg path[fill]'))
-                    .map((path) => (path.getAttribute('fill') || '').trim())"""
-                )
-                if isinstance(colors, list):
-                    fill_colors.extend([str(color).lower() for color in colors if color])
-            except Exception:
-                continue
+        try:
+            fill_colors = badge.first.evaluate(
+                """(node) => Array.from(node.querySelectorAll('svg path[fill]'))
+                .map((path) => (path.getAttribute('fill') || '').trim().toLowerCase())"""
+            )
+        except Exception:
+            return ""
 
-        if any("#3bb300" in color for color in fill_colors):
-            return "зелёная"
-        if any("#196dff" in color for color in fill_colors):
-            return "синяя"
+        if isinstance(fill_colors, list):
+            if any(color == "#3bb300" for color in fill_colors):
+                return "зелёная"
+            if any(color == "#196dff" for color in fill_colors):
+                return "синяя"
 
-        return "синяя"
+        return ""
 
     @staticmethod
     def _normalize_phone(raw_phone: str) -> str:
