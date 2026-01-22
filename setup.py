@@ -8,7 +8,21 @@ ICON_ICO = "resources/icon.ico"
 
 base = "gui" if sys.platform == "win32" else None
 
-build_exe_options = {
+
+    build_exe_options = {
+        'packages': ['os', 'flask', 'numpy'],
+        'include_files': [
+            ('app', 'app'),
+            ('config', 'config'),
+            ('resources', 'resources'),
+            ('ui', 'ui'),
+            ('sysroot.json', 'sysroot.json'),
+            ('results', 'results'),
+        ],
+        'excludes': ['tkinter'],
+        'frameworks': ['Cocoa', 'Quartz'],  # Указание фреймворков для macOS
+    }
+    
     "include_files": [
         ("app", "app"),
         ("config", "config"),
