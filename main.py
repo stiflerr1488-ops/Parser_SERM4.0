@@ -17,25 +17,10 @@ REQUIREMENTS_FILE = SCRIPT_DIR / "requirements.txt"
 PLAYWRIGHT_MARKER = SCRIPT_DIR / ".playwright_installed"
 
 
-def parse_bool(value: str) -> bool:
-    return value.strip().lower() in {"1", "true", "yes", "y"}
-
-
-def parse_optional_bool(value: str | None) -> bool | None:
-    if value is None:
-        return None
-    return parse_bool(value)
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Yandex Maps scraper")
     parser.add_argument("--query", help="Search query like 'ниша в город'")
     parser.add_argument("--limit", type=int, default=0, help="Limit number of organizations")
-    parser.add_argument(
-        "--headless",
-        default=None,
-        help="Run browser in headless mode (true/false)",
-    )
     parser.add_argument(
         "--mode",
         default="slow",
@@ -238,9 +223,6 @@ def run_cli(args: argparse.Namespace) -> None:
         Path(args.log) if args.log else None,
         results_folder / "log.txt",
     )
-    headless_override = parse_optional_bool(args.headless)
-    if headless_override is not None:
-        settings.program.headless = headless_override
 
     if args.mode == "fast":
         stop_event = threading.Event()
@@ -276,7 +258,6 @@ def run_cli(args: argparse.Namespace) -> None:
     scraper = YandexMapsScraper(
         query=args.query,
         limit=args.limit if args.limit > 0 else None,
-        headless=settings.program.headless,
         stop_event=stop_event,
         pause_event=pause_event,
         captcha_resume_event=captcha_event,

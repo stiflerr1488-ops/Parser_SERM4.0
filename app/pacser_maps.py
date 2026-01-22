@@ -55,7 +55,6 @@ class YandexMapsScraper:
         self,
         query: str,
         limit: Optional[int] = None,
-        headless: bool = False,
         stop_event=None,
         pause_event=None,
         captcha_resume_event=None,
@@ -65,7 +64,6 @@ class YandexMapsScraper:
     ) -> None:
         self.query = query
         self.limit = limit
-        self.headless = headless
         self.stop_event = stop_event or threading.Event()
         self.pause_event = pause_event or threading.Event()
         self.captcha_resume_event = captcha_resume_event or threading.Event()
@@ -75,17 +73,16 @@ class YandexMapsScraper:
 
     def run(self) -> Generator[Organization, None, None]:
         self._log(
-            "Запускаю парсер: запрос=%s, лимит=%s, headless=%s",
+            "Запускаю парсер: запрос=%s, лимит=%s",
             self.query,
             self.limit,
-            self.headless,
         )
         with sync_playwright() as p:
             LOGGER.info("Запускаю браузер")
+            launch_args = [*PLAYWRIGHT_LAUNCH_ARGS, "--start-minimized"]
             browser = launch_chrome(
                 p,
-                headless=self.headless,
-                args=PLAYWRIGHT_LAUNCH_ARGS,
+                args=launch_args,
             )
             LOGGER.info("Создаю контекст браузера")
             context = browser.new_context(
@@ -107,7 +104,6 @@ class YandexMapsScraper:
                 playwright=p,
                 base_context=context,
                 base_page=page,
-                headless=self.headless,
                 log=self._log,
                 hook=self.captcha_hook,
                 user_agent=PLAYWRIGHT_USER_AGENT,
